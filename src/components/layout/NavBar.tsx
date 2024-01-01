@@ -36,6 +36,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
     const [showSignUp, setShowSingUp] = useState<boolean>(false);
@@ -43,7 +44,9 @@ const NavBar = () => {
 
     return (
         <nav className="bg-slate-100 flex p-2">
-            <p>OLX</p>
+            <Link to="/">
+                <p>OLX</p>
+            </Link>
             <Select>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Theme" />
@@ -151,7 +154,9 @@ const NavBar = () => {
                     </DialogContent>
                 </Dialog>
             )}
-            <Button>Sell</Button>
+            <Link to="/sell">
+                <Button>Sell</Button>
+            </Link>
         </nav>
     );
 };

@@ -10,16 +10,37 @@ import { Input } from "@/components/ui/input";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-type Props = {};
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
+import { LoginCarousel } from "../constants/content";
+import SignUpForm from "../custom/SignUpForm";
+import LogInForm from "../custom/LogInForm";
+import { useContext, useState } from "react";
+import AuthContext from "@/context/AuthContext";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const NavBar = (props: Props) => {
+const NavBar = () => {
+    const [showSignUp, setShowSingUp] = useState<boolean>(false);
+    const { currentUser, logout } = useContext(AuthContext);
+
     return (
         <nav className="bg-slate-100 flex p-2">
             <p>OLX</p>
@@ -44,35 +65,92 @@ const NavBar = (props: Props) => {
                     <SelectItem value="system">System</SelectItem>
                 </SelectContent>
             </Select>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline">Log In</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle>Edit profile</DialogTitle>
-                        <DialogDescription>
-                            Make changes to your profile here. Click save when
-                            you're done.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <Button>Continue with Phone</Button>
-                        <Button>Continue with Google</Button>
-                        <p>or</p>
-                        <Button>Login with Email</Button>
-                    </div>
-                    <DialogFooter>
-                        <div>
-                            <p>All your personal details are safe with us.</p>
-                            <p>
-                                If you continue, you are accepting OLX Terms and
-                                Conditions and Privacy Policy
-                            </p>
+            {currentUser ? (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline">Profile</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                {currentUser.email}
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuItem onClick={logout}>
+                            Log out
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ) : (
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">Log In</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <Carousel>
+                                <CarouselContent>
+                                    {LoginCarousel.map((_, index) => (
+                                        <CarouselItem key={index}>
+                                            <div className="flex w-fit flex-col items-center justify-center gap-4 mx-auto pt-4">
+                                                <picture>
+                                                    <img
+                                                        className="h-24"
+                                                        src={_.image}
+                                                        alt=""
+                                                    />
+                                                </picture>
+                                                <p>{_.text}</p>
+                                            </div>
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious />
+                                <CarouselNext />
+                            </Carousel>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <Button variant="outline">
+                                Continue with Phone
+                            </Button>
+                            <Button variant="outline">
+                                Continue with Google
+                            </Button>
+                            <p>or</p>
+                            {showSignUp ? <SignUpForm /> : <LogInForm />}
                         </div>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                        {!showSignUp ? (
+                            <Button
+                                onClick={() => setShowSingUp(true)}
+                                variant="ghost"
+                            >
+                                Sign Up
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={() => setShowSingUp(false)}
+                                variant="ghost"
+                            >
+                                Log In
+                            </Button>
+                        )}
+
+                        <DialogFooter>
+                            <div>
+                                <p>
+                                    All your personal details are safe with us.
+                                </p>
+                                <p>
+                                    If you continue, you are accepting OLX Terms
+                                    and Conditions and Privacy Policy
+                                </p>
+                            </div>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
             <Button>Sell</Button>
         </nav>
     );

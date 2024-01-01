@@ -1,8 +1,6 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
-type Props = {};
-
-const HomePage = (props: Props) => {
+const HomePage = () => {
     const data = [1, 2, 3, 4, 5];
     return (
         <div>

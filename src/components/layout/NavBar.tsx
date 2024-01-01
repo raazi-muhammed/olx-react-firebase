@@ -14,6 +14,9 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { IoMdSearch } from "react-icons/io";
+import { FiSmartphone } from "react-icons/fi";
+import { FaGoogle } from "react-icons/fa";
 
 import {
     Carousel,
@@ -37,35 +40,39 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import Icons from "@/assets/Icons";
+
+enum PageSate {
+    QUICK_LOGIN_SING_UP = "QUICK_LOGIN_SING_UP",
+    LOGIN_EMAIL = "LOGIN_EMAIL",
+    SING_UP = "SING_UP",
+}
 
 const NavBar = () => {
-    const [showSignUp, setShowSingUp] = useState<boolean>(false);
+    const [pageState, setPageState] = useState<PageSate>(
+        PageSate.QUICK_LOGIN_SING_UP
+    );
     const { currentUser, logout } = useContext(AuthContext);
 
     return (
-        <nav className="bg-slate-100 flex p-2">
-            <Link to="/">
-                <p>OLX</p>
+        <nav className="bg-slate-100 flex p-2 gap-4">
+            <Link className="mx-3" to="/">
+                <Icons.OlxLogo />
             </Link>
+            <Input className="w-48" type="text" placeholder="Location" />
+            <div className="flex bg-primary rounded w-full">
+                <Input type="text" placeholder="Search" className="w-full" />
+                <Button className="bg-primary px-2" size="icon">
+                    <IoMdSearch size="1.8em" />
+                </Button>
+            </div>
             <Select>
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Theme" />
+                <SelectTrigger className="w-fit font-semibold text-md border-none bg-slate-100 h-12">
+                    <SelectValue placeholder="Language" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-            </Select>
-            <Input type="text" placeholder="Search" />
-            <Select>
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
+                    <SelectItem value="english">English</SelectItem>
+                    <SelectItem value="hindi">Hindi</SelectItem>
                 </SelectContent>
             </Select>
             {currentUser ? (
@@ -89,7 +96,12 @@ const NavBar = () => {
             ) : (
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="outline">Log In</Button>
+                        <Button
+                            className="h-12 font-semibold underline hover:no-underline"
+                            variant="ghost"
+                        >
+                            Log In
+                        </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -114,40 +126,88 @@ const NavBar = () => {
                                 <CarouselNext />
                             </Carousel>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <Button variant="outline">
-                                Continue with Phone
-                            </Button>
-                            <Button variant="outline">
-                                Continue with Google
-                            </Button>
-                            <p>or</p>
-                            {showSignUp ? <SignUpForm /> : <LogInForm />}
-                        </div>
-                        {!showSignUp ? (
-                            <Button
-                                onClick={() => setShowSingUp(true)}
-                                variant="ghost"
-                            >
-                                Sign Up
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={() => setShowSingUp(false)}
-                                variant="ghost"
-                            >
-                                Log In
-                            </Button>
-                        )}
+                        <div className="grid py-4">
+                            {pageState === PageSate.SING_UP ? (
+                                <>
+                                    <SignUpForm />
+                                    <p className="mx-auto my-4 font-bold">OR</p>
+                                    <Button
+                                        onClick={() =>
+                                            setPageState(PageSate.LOGIN_EMAIL)
+                                        }
+                                        variant="ghost"
+                                        size="sm"
+                                        className="underline font-bold"
+                                    >
+                                        Login
+                                    </Button>
+                                </>
+                            ) : pageState === PageSate.LOGIN_EMAIL ? (
+                                <>
+                                    <LogInForm />
+                                    <p className="mx-auto my-4 font-bold">OR</p>
+                                    <Button
+                                        onClick={() =>
+                                            setPageState(
+                                                PageSate.QUICK_LOGIN_SING_UP
+                                            )
+                                        }
+                                        variant="ghost"
+                                        size="sm"
+                                        className="underline font-bold"
+                                    >
+                                        Quick Login
+                                    </Button>
 
+                                    <Button
+                                        onClick={() =>
+                                            setPageState(PageSate.SING_UP)
+                                        }
+                                        variant="ghost"
+                                        size="sm"
+                                        className="underline font-bold"
+                                    >
+                                        Sign Up
+                                    </Button>
+                                </>
+                            ) : (
+                                <>
+                                    <Button
+                                        variant="outline"
+                                        className="gap-2 mb-4"
+                                    >
+                                        <FiSmartphone size="1.3em" />
+                                        <span>Continue with Phone</span>
+                                    </Button>
+                                    <Button variant="outline" className="gap-2">
+                                        <FaGoogle size="1.3em" />
+                                        Continue with Google
+                                    </Button>
+                                    <p className="mx-auto my-4 font-bold">OR</p>
+                                    <Button
+                                        onClick={() =>
+                                            setPageState(PageSate.LOGIN_EMAIL)
+                                        }
+                                        variant="ghost"
+                                        size="sm"
+                                        className="underline font-bold"
+                                    >
+                                        Log In
+                                    </Button>
+                                </>
+                            )}
+                        </div>
                         <DialogFooter>
-                            <div>
+                            <div className="text-xs text-slate-400 text-center">
                                 <p>
                                     All your personal details are safe with us.
                                 </p>
                                 <p>
-                                    If you continue, you are accepting OLX Terms
-                                    and Conditions and Privacy Policy
+                                    If you continue, you are accepting
+                                    <span className="text-blue-500 ms-1">
+                                        OLX Terms and Conditions and Privacy
+                                        Policy
+                                    </span>
                                 </p>
                             </div>
                         </DialogFooter>
@@ -155,7 +215,10 @@ const NavBar = () => {
                 </Dialog>
             )}
             <Link to="/sell">
-                <Button>Sell</Button>
+                <div className="grid place-items-center">
+                    <Icons.Sell />
+                    <span className="absolute font-bold">+ SELL</span>
+                </div>
             </Link>
         </nav>
     );

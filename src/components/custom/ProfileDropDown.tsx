@@ -10,15 +10,17 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
 
 const ProfileDropDown = () => {
     const { currentUser, logout } = useContext(AuthContext);
+    const { t } = useTranslation();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="underline font-bold">
-                    Profile
+                    {t("navBarContent.profile")}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">

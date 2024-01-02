@@ -1,4 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 const FooterAdd = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="h-44 bg-slate-50">
             <section className="container mx-auto flex gap-4 justify-around">
@@ -10,14 +14,13 @@ const FooterAdd = () => {
                     />
                 </picture>
                 <section className="my-auto">
-                    <p className="font-bold text-xl">TRY THE OLX APP</p>
-                    <p>
-                        Buy, sell and find just about anything using the app on
-                        your mobile.
+                    <p className="font-bold text-xl">
+                        {t("footerAddContent.heading")}
                     </p>
+                    <p>{t("footerAddContent.para")}</p>
                 </section>
                 <section className="my-auto">
-                    <p className="font-bold">GET OUT APP TODAY</p>
+                    <p className="font-bold">{t("footerAddContent.cta")}</p>
                     <div className="flex gap-2">
                         <img
                             className="w-auto h-8"

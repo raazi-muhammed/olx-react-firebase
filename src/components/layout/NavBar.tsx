@@ -52,7 +52,15 @@ const NavBar = () => {
     const [pageState, setPageState] = useState<PageSate>(
         PageSate.QUICK_LOGIN_SING_UP
     );
-    const { currentUser, logout } = useContext(AuthContext);
+    const { currentUser, logout, signInWithGoogle } = useContext(AuthContext);
+
+    const handleSignInWithGoogle = () => {
+        try {
+            signInWithGoogle();
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <nav className="bg-slate-100 w-screen">
@@ -196,6 +204,7 @@ const NavBar = () => {
                                             <span>Continue with Phone</span>
                                         </Button>
                                         <Button
+                                            onClick={handleSignInWithGoogle}
                                             variant="outline"
                                             className="gap-2"
                                         >

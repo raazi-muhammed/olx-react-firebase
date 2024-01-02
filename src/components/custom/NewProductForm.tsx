@@ -14,25 +14,42 @@ import {
     FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { addAddToDb } from "@/services/fireStore";
+import { useState } from "react";
+import { uploadImage } from "@/services/fireStorage";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
-    title: z.string().min(10),
+    title: z.string().min(5),
     description: z.string().min(10),
     category: z.string(),
     price: z.coerce.number().gt(0),
-    photos: z.string(),
-    location: z.string().min(10),
+    photos: z.string().optional(),
+    location: z.string().min(5),
     name: z.string().min(6),
     phone: z.coerce.number(),
 });
 
 export default function NewProductForm() {
+    const navigate = useNavigate();
+    const [imageToUpload, setImageToUpload] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
+        if (imageToUpload) {
+            const photoUrl = await uploadImage(imageToUpload);
+            if (photoUrl) {
+                addAddToDb({ ...values, photos: photoUrl });
+            }
+        }
+        toast("Add posted");
+        navigate("/");
     }
 
     return (
@@ -108,8 +125,27 @@ export default function NewProductForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Photos*</FormLabel>
+                            {imagePreview ? (
+                                <img
+                                    className="object-cover rounded mb-2 border border-input h-32"
+                                    src={imagePreview}
+                                    alt=""
+                                />
+                            ) : null}
                             <FormControl>
-                                <Input type="file" {...field} />
+                                <Input
+                                    onChange={(e) => {
+                                        if (e.target.files) {
+                                            setImageToUpload(e.target.files[0]);
+                                            setImagePreview(
+                                                URL.createObjectURL(
+                                                    e.target.files[0]
+                                                )
+                                            );
+                                        }
+                                    }}
+                                    type="file"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

@@ -6,6 +6,7 @@ import SellerProduct from "./pages/SellerProduct";
 import Footer from "./components/layout/Footer";
 import FooterAdd from "./components/layout/FooterAdd";
 import { Toaster } from "@/components/ui/sonner";
+import ProtectedRoute from "./lib/ProtectedRoute";
 
 function App() {
     return (
@@ -15,7 +16,14 @@ function App() {
                     <NavBar />
                     <Routes>
                         <Route path="/" element={<HomePage />} />
-                        <Route path="/sell" element={<SellerProduct />} />
+                        <Route
+                            path="/sell"
+                            element={
+                                <ProtectedRoute>
+                                    <SellerProduct />
+                                </ProtectedRoute>
+                            }
+                        />
                     </Routes>
                     <FooterAdd />
                     <Footer />

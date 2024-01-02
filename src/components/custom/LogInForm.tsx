@@ -31,7 +31,6 @@ const LogInForm = () => {
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
         login(values.email, values.password).then((res) => {
             console.log(res);
         });
@@ -60,7 +59,7 @@ const LogInForm = () => {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input {...field} />
+                                <Input type="password" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

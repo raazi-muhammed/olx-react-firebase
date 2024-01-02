@@ -6,7 +6,7 @@ const SellerProduct = () => {
             <p className="font-bold text-xl mx-auto text-center mt-8 mb-4">
                 POST YOUR ADD
             </p>
-            <section className="max-w-3xl mx-auto border p-8 rounded">
+            <section className="max-w-3xl mx-auto border p-8 rounded mb-8">
                 <NewProductForm />
             </section>
         </div>

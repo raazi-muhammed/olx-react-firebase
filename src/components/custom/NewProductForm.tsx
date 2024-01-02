@@ -15,10 +15,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addAddToDb } from "@/services/fireStore";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { uploadImage } from "@/services/fireStorage";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "@/context/AuthContext";
 
 const formSchema = z.object({
     title: z.string().min(5),
@@ -35,6 +36,8 @@ export default function NewProductForm() {
     const navigate = useNavigate();
     const [imageToUpload, setImageToUpload] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+    const { currentUser } = useContext(AuthContext);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -173,7 +176,17 @@ export default function NewProductForm() {
                         <FormItem>
                             <FormLabel>Name*</FormLabel>
                             <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                    type="text"
+                                    {...field}
+                                    defaultValue={
+                                        currentUser?.displayName
+                                            ? currentUser.displayName
+                                            : currentUser?.email
+                                            ? currentUser.email
+                                            : ""
+                                    }
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -186,7 +199,15 @@ export default function NewProductForm() {
                         <FormItem>
                             <FormLabel>Phone Number*</FormLabel>
                             <FormControl>
-                                <Input type="number" {...field} />
+                                <Input
+                                    type="number"
+                                    {...field}
+                                    defaultValue={
+                                        currentUser?.phoneNumber
+                                            ? currentUser.phoneNumber
+                                            : ""
+                                    }
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

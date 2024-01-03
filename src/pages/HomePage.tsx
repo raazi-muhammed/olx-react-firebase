@@ -1,4 +1,5 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
+import formatPrice from "@/lib/utils";
 import { getAds } from "@/services/fireStore";
 import { addType } from "@/types/modalTypes";
 import { useEffect, useState } from "react";
@@ -14,19 +15,21 @@ const HomePage = () => {
 
     return (
         <div className="min-h-[70vh]">
-            <main className="container mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+            <main className="container justify-items-stretch mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                 {ads.map((add, i) => (
-                    <Card key={i}>
+                    <Card key={i} className="h-full">
                         <CardHeader className="p-0 m-2">
                             <img
                                 className="w-full aspect-video object-cover rounded-sm"
                                 src={add.photos}
-                                alt=""
+                                alt="product image"
                             />
                         </CardHeader>
                         <CardFooter className="m-0 pb-4 px-4">
-                            <section>
-                                <p className="font-bold text-xl">{add.price}</p>
+                            <section className="w-full">
+                                <p className="font-bold text-xl">
+                                    {formatPrice(add.price)}
+                                </p>
                                 <p className="text-muted-foreground">
                                     {add.title}
                                 </p>

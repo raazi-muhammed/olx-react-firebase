@@ -45,12 +45,16 @@ export default function NewProductForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
-        if (imageToUpload) {
-            const photoUrl = await uploadImage(imageToUpload);
-            if (photoUrl) {
-                addAddToDb({ ...values, photos: photoUrl });
-            }
+        if (!imageToUpload) {
+            toast("No image");
+            return;
         }
+
+        const photoUrl = await uploadImage(imageToUpload);
+        if (photoUrl) {
+            addAddToDb({ ...values, photos: photoUrl });
+        }
+
         toast("Add posted");
         navigate("/");
     }
@@ -137,6 +141,7 @@ export default function NewProductForm() {
                             ) : null}
                             <FormControl>
                                 <Input
+                                    accept="image/*"
                                     onChange={(e) => {
                                         if (e.target.files) {
                                             setImageToUpload(e.target.files[0]);
